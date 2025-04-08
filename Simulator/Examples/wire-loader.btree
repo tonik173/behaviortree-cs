@@ -1,0 +1,57 @@
+{
+  "BehaviorTree": {
+    "$type": "BehaviorTrees.Sequence, BehaviorTrees",
+    "Step": 0,
+    "Nodes": [
+      {
+        "$type": "BehaviorTrees.Loop, BehaviorTrees",
+        "Count": 5,
+        "Nodes": [
+          {
+            "$type": "BehaviorTrees.Selector, BehaviorTrees",
+            "Step": 0,
+            "Nodes": [
+              {
+                "$type": "BehaviorTrees.EventCondition, BehaviorTrees",
+                "Event": {
+                  "$type": "Nodes.WireLoader.WireLoadedEvent, Nodes",
+                  "Name": "WireLoadedEvent",
+                  "Version": 0
+                },
+                "IsInstant": true
+              },
+              {
+                "$type": "BehaviorTrees.Sequence, BehaviorTrees",
+                "Step": 0,
+                "Nodes": [
+                  {
+                    "$type": "BehaviorTrees.Parallel, BehaviorTrees",
+                    "SuccessPolicy": 2,
+                    "Nodes": [
+                      {
+                        "$type": "Nodes.WireLoader.MoveToSlot, Nodes",
+                        "Slot": 5
+                      },
+                      {
+                        "$type": "BehaviorTrees.Limiter, BehaviorTrees",
+                        "Limit": 1,
+                        "Nodes": [
+                          {
+                            "$type": "Nodes.WireLoader.ResetLoopFormer, Nodes"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Nodes.WireLoader.CloseWireDrive, Nodes"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

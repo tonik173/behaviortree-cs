@@ -190,8 +190,11 @@ namespace BehaviorTreesEditor
 
 		private void _engine_ExecutionCompleted(Node arg1, EventArgs arg2)
 		{
-			entityComboBox.Enabled = true;
-			executeTSButton.Enabled = true;
+			this.Invoke(new Action(() =>
+			{
+				entityComboBox.Enabled = true;
+				executeTSButton.Enabled = true;
+			}));
 		}
 
 		private Entity GetSelectedEntity()

@@ -75,7 +75,7 @@ namespace BehaviorTrees.Engine
 				ExecutionCompleted?.Invoke(_currentTree, EventArgs.Empty);
 				_currentTree = null;
 
-			}, TaskScheduler.FromCurrentSynchronizationContext());
+			}, TaskScheduler.Default);
 		}
 
 		public void StopScript()
