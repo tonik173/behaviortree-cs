@@ -12,7 +12,7 @@ namespace BehaviorTrees
 	[BTNode("DelegateCondition", "Condition", false)]
 	public class DelegateCondition : Condition
 	{
-		Func<Entity, bool> _condition;
+		private Func<Entity, bool> _condition;
 
 		public DelegateCondition(Func<Entity, bool> condition)
 		{

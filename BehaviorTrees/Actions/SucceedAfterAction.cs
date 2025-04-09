@@ -1,6 +1,5 @@
 // Copyright(c) 2015 Eugeny Novikov. Code under MIT license.
 
-using BehaviorTrees.Utils;
 using System.Runtime.Serialization;
 
 namespace BehaviorTrees

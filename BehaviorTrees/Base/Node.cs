@@ -2,7 +2,6 @@
 
 using BehaviorTrees.Collections;
 using BehaviorTrees.Engine;
-using BehaviorTrees.Utils;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -26,14 +25,14 @@ namespace BehaviorTrees
 	{
 		protected Entity _owner;
 		protected IScriptedContext _scriptedContext;
-		protected bool _isActive;
+		private bool _isActive;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public bool IsActive
 		{
-			get { return _isActive; }
+			get => _isActive;
 			set
 			{
 				if (_isActive == value)
@@ -55,7 +54,7 @@ namespace BehaviorTrees
 		[Browsable(false)]
 		public Entity Owner
 		{
-			get { return _owner; }
+			get => _owner;
 			set
 			{
 				if (_owner == value)
@@ -80,7 +79,7 @@ namespace BehaviorTrees
 		[Browsable(false)]
 		public IScriptedContext ScriptedContext
 		{
-			get { return _scriptedContext; }
+			get => _scriptedContext;
 			set
 			{
 				if (_scriptedContext != value)
@@ -95,22 +94,13 @@ namespace BehaviorTrees
 		}
 
 		[Browsable(false)]
-		public virtual string NodeType
-		{
-			get { return GetType(GetType()); }
-		}
+		public virtual string NodeType => GetType(GetType());
 
 		[Browsable(false)]
-		public virtual string NodeName
-		{
-			get { return GetName(GetType()); }
-		}
+		public virtual string NodeName => GetName(GetType());
 
 		[Browsable(false)]
-		public virtual string NodeParameters
-		{
-			get { return ""; }
-		}
+		public virtual string NodeParameters => "";
 
 		/// <summary>
 		/// 
@@ -120,10 +110,6 @@ namespace BehaviorTrees
 			_isActive = false;
 		}
 
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public void Activate()
 		{
 			if (IsActive)
@@ -135,9 +121,6 @@ namespace BehaviorTrees
 				OnRootActivated();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
 		public void Deactivate()
 		{
 			if (!IsActive)
@@ -149,9 +132,6 @@ namespace BehaviorTrees
 				OnRootDeactivated();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
 		public ExecutingStatus Execute()
 		{
 			if (!IsActive)
@@ -165,28 +145,17 @@ namespace BehaviorTrees
 			return status;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="eventArgs"></param>
 		public virtual void Notify(object sender, object eventArgs)
 		{
 			Root.SendValueChanged(this);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
 		protected virtual void OnRootActivated()
 		{
 			foreach (var node in Nodes)
 				node.OnRootActivated();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
 		protected virtual void OnRootDeactivated()
 		{
 			foreach (var node in Nodes)
@@ -282,10 +251,6 @@ namespace BehaviorTrees
 			Owner = null;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
 		public override string ToString()
 		{
 			if (NodeParameters == "")
