@@ -33,6 +33,71 @@ A simple C# example of Behavior Trees + Editor based on the code provided by [Eu
 - **SucceedAction**: Always Success.
 - **SucceedAfterAction**: Return Succeed after several iterations.
 
+## Example
+
+![wire-loader](./Images/wire-loader.png)
+
+```json
+{
+  "BehaviorTree": {
+    "$type": "BehaviorTrees.Sequence, BehaviorTrees",
+    "Step": 0,
+    "Nodes": [
+      {
+        "$type": "BehaviorTrees.Loop, BehaviorTrees",
+        "Count": 5,
+        "Nodes": [
+          {
+            "$type": "BehaviorTrees.Selector, BehaviorTrees",
+            "Step": 0,
+            "Nodes": [
+              {
+                "$type": "BehaviorTrees.EventCondition, BehaviorTrees",
+                "Event": {
+                  "$type": "Nodes.WireLoader.WireLoadedEvent, Nodes",
+                  "Name": "WireLoadedEvent",
+                  "Version": 0
+                },
+                "IsInstant": true
+              },
+              {
+                "$type": "BehaviorTrees.Sequence, BehaviorTrees",
+                "Step": 0,
+                "Nodes": [
+                  {
+                    "$type": "BehaviorTrees.Parallel, BehaviorTrees",
+                    "SuccessPolicy": 2,
+                    "Nodes": [
+                      {
+                        "$type": "Nodes.WireLoader.MoveToSlot, Nodes",
+                        "Slot": 5
+                      },
+                      {
+                        "$type": "BehaviorTrees.Limiter, BehaviorTrees",
+                        "Limit": 1,
+                        "Nodes": [
+                          {
+                            "$type": "Nodes.WireLoader.ResetLoopFormer, Nodes"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Nodes.WireLoader.CloseWireDrive, Nodes"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+
 ## Links
 
 - [Example Behavior Tree using BehaviorTree.CPP](https://github.com/tonik173/behaviortree-example)

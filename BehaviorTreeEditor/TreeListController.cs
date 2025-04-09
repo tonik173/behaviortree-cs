@@ -7,9 +7,6 @@ using CT = CommonTools;
 
 namespace BehaviorTreesEditor
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	internal class TreeNodeCompare<T> : IComparer<T> where T : TreeNode<T>
 	{
 		readonly IComparer<T> _valueCompare;
@@ -25,20 +22,12 @@ namespace BehaviorTreesEditor
 		}
 	}
 
-
-	/// <summary>
-	/// 
-	/// </summary>
 	public interface ITreeListNodeMapper<T> where T : TreeNode<T>
 	{
 		void UpdateNode(T dataNode, CT.Node treeNode, CT.TreeListView view);
 		T GetNodeInfo(CT.Node treeNode);
 	}
 
-
-	/// <summary>
-	/// 
-	/// </summary>
 	public class TreeLisNodeDefaultMapper<T> : ITreeListNodeMapper<T> where T : TreeNode<T>
 	{
 		public void UpdateNode(T dataNode, CT.Node treeNode, CT.TreeListView view)
@@ -52,10 +41,6 @@ namespace BehaviorTreesEditor
 		}
 	}
 
-
-	/// <summary>
-	/// 
-	/// </summary>
 	public class TreeListController<T> : IDisposable where T : TreeNode<T>
 	{
 		private CT.TreeListView _treeList;
@@ -154,15 +139,6 @@ namespace BehaviorTreesEditor
 			var selectedNode = SelectedNode;
 			_treeList.BeginUpdate();
 			UpdateNode(dataNode, GetViewNode(dataNode), recursive);
-			_treeList.EndUpdate();
-			SelectedNode = selectedNode;
-		}
-
-		public void UpdateNode(CT.Node viewNode, bool recursive)
-		{
-			var selectedNode = SelectedNode;
-			_treeList.BeginUpdate();
-			UpdateNode(GetDataNode(viewNode), viewNode, recursive);
 			_treeList.EndUpdate();
 			SelectedNode = selectedNode;
 		}
