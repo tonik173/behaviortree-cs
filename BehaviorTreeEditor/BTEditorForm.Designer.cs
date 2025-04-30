@@ -1,4 +1,7 @@
-﻿namespace BehaviorTreesEditor
+﻿using System;
+using Microsoft.Extensions.Logging;
+
+namespace BehaviorTreesEditor
 {
 	partial class BTEditorForm
 	{

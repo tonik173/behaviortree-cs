@@ -1,26 +1,11 @@
 ﻿// Copyright(c) 2015 Eugeny Novikov. Code under MIT license.
 
-using BehaviorTrees.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace BehaviorTrees.Engine
 {
-	public sealed class Engine
+	public sealed class Engine(ILogger<Engine> logger, IServiceProvider serviceProvider)
 	{
-		private static Engine _instance;
-
-		public static Engine Instance
-		{
-			get
-			{
-				if (_instance == null)
-					_instance = new Engine();
-				return _instance;
-			}
-		}
-
-		private Engine()
-		{ }
-
 		public Action<object, EventArgs> SceneLoaded { get; set; }
 		public Action<Node, EventArgs> ExecutionCompleted { get; set; }
 
@@ -42,6 +27,7 @@ namespace BehaviorTrees.Engine
 
 		public void ExecuteScript(Node behaviorTree, Entity entity)
 		{
+			entity.ServiceProvider = serviceProvider;
 			_currentTree = behaviorTree;
 			_currentTree.Owner = entity;
 
@@ -59,15 +45,15 @@ namespace BehaviorTrees.Engine
 					Exception ex = t.Exception;
 					while (ex is AggregateException && ex.InnerException != null)
 						ex = ex.InnerException;
-					Log.Write("The script execution failed: " + ex.Message);
+					logger.LogError("The script execution failed", ex);
 				}
 				else if (t.IsCanceled)
 				{
-					Log.Write("The script execution cancelled !");
+					logger.LogWarning("The script execution cancelled!");
 				}
 				else
 				{
-					Log.Write("The script is executed successfully !");
+					logger.LogInformation("The script is executed successfully!");
 				}
 
 				if (!t.IsFaulted)
@@ -82,7 +68,7 @@ namespace BehaviorTrees.Engine
 		{
 			if (_currentTree == null)
 			{
-				Log.Write("_current == null");
+				logger.LogInformation("_current == null");
 				return;
 			}
 

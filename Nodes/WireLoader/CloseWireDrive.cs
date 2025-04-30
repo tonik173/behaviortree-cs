@@ -1,7 +1,8 @@
-﻿using BehaviorTrees.Utils;
-using BehaviorTrees;
+﻿using BehaviorTrees;
 using System.Runtime.Serialization;
 using BehaviorTrees.Engine;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Nodes.WireLoader;
 
@@ -11,18 +12,27 @@ public class CloseWireDrive : Node
 {
 	bool _completed;
 
+	ILogger<CloseWireDrive>? _logger;
+	private ILogger<CloseWireDrive> Logger
+	{
+		get
+		{
+			_logger ??= ServiceProvider.GetService<ILoggerFactory>()!.CreateLogger<CloseWireDrive>();
+			return _logger;
+		}
+	}
 
 	protected override void OnActivated()
 	{
 		base.OnActivated();
-		Log.Write($"{GetType().Name}: closing wire drive");
+		Logger.LogInformation($"{GetType().Name}: closing wire drive");
 		Task.Delay(1000).ContinueWith(_ =>
 		{
 			WireLoadedEvent ev = new ();
 			ev.Owner = Owner;
 			EventManager.Instance.TriggerEvent(ev);
 
-			Log.Write($"{GetType().Name}: wire drive closed");
+			Logger.LogInformation($"{GetType().Name}: wire drive closed");
 			_completed = true;
 		});
 	}

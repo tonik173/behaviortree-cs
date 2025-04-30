@@ -1,8 +1,10 @@
 ﻿// Copyright(c) 2015 Eugeny Novikov. Code under MIT license.
 
 using BehaviorTrees.Utils;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BehaviorTrees.Engine
 {
@@ -21,6 +23,16 @@ namespace BehaviorTrees.Engine
 		public event EventHandler Deactivated;
 
 		private Entity _owner;
+
+		ILogger<Component>? _logger;
+		private ILogger<Component> Logger
+		{
+			get
+			{
+				_logger ??= _owner.ServiceProvider.GetService<ILoggerFactory>()!.CreateLogger<Component>();
+				return _logger;
+			}
+		}
 
 		[Browsable(false)]
 		[Category("Component")]
@@ -128,7 +140,7 @@ namespace BehaviorTrees.Engine
 			}
 			catch (Exception e)
 			{
-				Log.Write(e, "Component.Initialize() failed to intialize component '{0}'.", this);
+				Logger.LogError(e, "Component.Initialize() failed to initialize component '{0}'", this);
 			}
 		}
 
@@ -176,7 +188,7 @@ namespace BehaviorTrees.Engine
 			catch (Exception ex)
 			{
 				_isActive = false;
-				Log.Write(ex, "Component.Activate() failed with exception: '{0}'", this);
+				Logger.LogError(ex, "Component.Activate() failed with exception: '{0}'", this);
 			}
 		}
 
@@ -204,7 +216,7 @@ namespace BehaviorTrees.Engine
 			}
 			catch (Exception ex)
 			{
-				Log.Write(ex, "Component.Deactivate() failed with exception: '{0}'", this);
+				Logger.LogError(ex, "Component.Deactivate() failed with exception: '{0}'", this);
 			}
 		}
 

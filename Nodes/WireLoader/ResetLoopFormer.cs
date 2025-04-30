@@ -1,9 +1,9 @@
 ﻿using BehaviorTrees;
-using BehaviorTrees.Utils;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Runtime.Serialization;
 
 namespace Nodes.WireLoader;
-
 
 [DataContract]
 [BTNode("ResetLoopFormer", "Wire Loader")]
@@ -11,13 +11,23 @@ public class ResetLoopFormer : Node
 {
 	bool _completed;
 
+	ILogger<ResetLoopFormer>? _logger;
+	private ILogger<ResetLoopFormer> Logger
+	{
+		get
+		{
+			_logger ??= ServiceProvider.GetService<ILoggerFactory>()!.CreateLogger<ResetLoopFormer>();
+			return _logger;
+		}
+	}
+
 	protected override void OnActivated()
 	{
 		base.OnActivated();
-		Log.Write($"{GetType().Name}: resetting loop former");
+		Logger.LogInformation($"{GetType().Name}: resetting loop former");
 		Task.Delay(1000).ContinueWith(_ =>
 		{
-			Log.Write($"{GetType().Name}: loop former has been reset");
+			Logger.LogInformation($"{GetType().Name}: loop former has been reset");
 			_completed = true;
 		});
 	}

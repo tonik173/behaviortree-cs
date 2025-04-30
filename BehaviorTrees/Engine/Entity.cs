@@ -3,6 +3,7 @@
 using BehaviorTrees.Utils;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.DataContracts;
 
 namespace BehaviorTrees.Engine
 {
@@ -10,8 +11,9 @@ namespace BehaviorTrees.Engine
 	public class Entity : Component
 	{
 		private Dictionary<Type, Component> _components;
+		public IServiceProvider ServiceProvider;
 
-		[DataMember]
+	   [DataMember]
 		[JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
 		protected Dictionary<Type, Component> Components
 		{

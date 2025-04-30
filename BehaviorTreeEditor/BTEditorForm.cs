@@ -1,9 +1,12 @@
 ﻿// Copyright(c) 2015 Eugeny Novikov. Code under MIT license.
 
+using System;
 using BehaviorTrees;
 using BehaviorTrees.Engine;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BehaviorTreesEditor
 {
@@ -15,11 +18,16 @@ namespace BehaviorTreesEditor
 			set { scriptEditorControl.Script = value; }
 		}
 
-		public BTEditorForm()
+		public BTEditorForm(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
 		{
 			InitializeComponent();
+
+			Engine engine = serviceProvider.GetService<Engine>();
+			engine.SceneLoaded += (s, e) => { statusLabel.Text = "Scene loaded."; };
+
+			scriptEditorControl.SetEngine(engine);
 			scriptEditorControl.ScriptNameChanged += (s, e) => UpdateCaption(Data);
-			Engine.Instance.SceneLoaded += (s, e) => { statusLabel.Text = "Scene loaded."; };
+
 			statusLabel.Text = "Load or create new Behavior Tree";
 			scriptEditorControl.LoadEmpty();
 		}

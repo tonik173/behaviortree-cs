@@ -38,7 +38,6 @@ namespace BehaviorTrees.Engine
 			}
 		}
 
-
 		private EventManager()
 		{
 			SetupEvents();
@@ -54,7 +53,7 @@ namespace BehaviorTrees.Engine
 			}
 			catch (Exception exc)
 			{
-				Log.Write("EventManager.SetupEvents: " + exc);
+				throw exc;
 			}
 		}
 

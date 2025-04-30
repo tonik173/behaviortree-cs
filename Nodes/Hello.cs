@@ -1,5 +1,6 @@
 ﻿using BehaviorTrees;
-using BehaviorTrees.Utils;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Runtime.Serialization;
 
 namespace Nodes;
@@ -11,6 +12,16 @@ public class Hello : Node
 {
 	private string _firstName;
 	private bool _completed;
+
+	ILogger<Hello>? _logger;
+	private ILogger<Hello> Logger
+	{
+		get
+		{
+			_logger ??= ServiceProvider.GetService<ILoggerFactory>()!.CreateLogger<Hello>();
+			return _logger;
+		}
+	}
 
 	[DataMember]
 	public string FirstName
@@ -36,14 +47,14 @@ public class Hello : Node
 	protected override void OnActivated()
 	{
 		base.OnActivated();
-		Log.Write($"{GetType().Name} says hello to {FirstName}");
+		Logger.LogInformation($"{GetType().Name} says hello to {FirstName}");
 		Task.Delay(1000).ContinueWith(_ => _completed = true);
 	}
 
 	protected override void OnDeactivated()
 	{
 		base.OnDeactivated();
-		Log.Write($"{GetType().Name} greeting completed ");
+		Logger.LogInformation($"{GetType().Name} greeting completed ");
 	}
 
 	protected override ExecutingStatus OnExecuted()

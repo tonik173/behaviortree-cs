@@ -3,6 +3,9 @@
 using BehaviorTreesEditor;
 using System;
 using System.Windows.Forms;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using BehaviorTrees.Engine;
 
 namespace BehaviorTreesExample
 {
@@ -15,7 +18,24 @@ namespace BehaviorTreesExample
 		static void Main()
 		{
 			ApplicationConfiguration.Initialize();
-			Application.Run(new BTEditorForm());
+			Application.SetHighDpiMode(HighDpiMode.SystemAware);
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+
+			var host = CreateHostBuilder().Build();
+			var serviceProvider = host.Services;
+
+			Application.Run(serviceProvider.GetRequiredService<BTEditorForm>());
+		}
+
+		static IHostBuilder CreateHostBuilder()
+		{
+			return Host.CreateDefaultBuilder()
+				.ConfigureServices((context, services) =>
+				{
+					services.AddSingleton<Engine>();
+					services.AddTransient<BTEditorForm>();
+				});
 		}
 	}
 }

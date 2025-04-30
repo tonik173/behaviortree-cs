@@ -26,6 +26,7 @@ namespace BehaviorTrees
 		protected Entity _owner;
 		protected IScriptedContext _scriptedContext;
 		private bool _isActive;
+		protected IServiceProvider ServiceProvider => _owner?.ServiceProvider;
 
 		/// <summary>
 		/// 

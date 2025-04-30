@@ -9,22 +9,38 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
 
 namespace BehaviorTreesEditor
 {
 	public partial class BTEditorControl : UserControl
 	{
+		private ILogger<BTEditorControl> _logger;
+
 		public BTEditorControl()
 		{
 			InitializeComponent();
 
-			_engine.SceneLoaded += _engine_SceneLoaded;
-			_engine.ExecutionCompleted += _engine_ExecutionCompleted;
-
 			_nodeTypes = new List<Type>(GetNodeTypes());
 		}
 
-		readonly Engine _engine = Engine.Instance;
+
+		private Engine _engine;
+		public void SetEngine(Engine engine)
+		{
+			if (_engine != null)
+			{
+				_engine.SceneLoaded -= _engine_SceneLoaded;
+				_engine.ExecutionCompleted -= _engine_ExecutionCompleted;
+			}
+			_engine = engine;
+			if (_engine != null)
+			{
+				_engine.SceneLoaded += _engine_SceneLoaded;
+				_engine.ExecutionCompleted += _engine_ExecutionCompleted;
+			}
+		}
+
 
 		BTScript _script;
 		TreeListController<Node> _controller;
@@ -203,7 +219,7 @@ namespace BehaviorTreesEditor
 
 			if (string.IsNullOrEmpty(name))
 			{
-				Log.Write("name == \"\"");
+				_logger.LogInformation("name == \"\"");
 				return null;
 			}
 
@@ -211,7 +227,7 @@ namespace BehaviorTreesEditor
 
 			if (ent == null)
 			{
-				Log.Write("ent == null");
+				_logger.LogInformation("ent == null");
 				return null;
 			}
 

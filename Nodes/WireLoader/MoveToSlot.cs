@@ -1,5 +1,6 @@
 ﻿using BehaviorTrees;
-using BehaviorTrees.Utils;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Runtime.Serialization;
 
 namespace Nodes.WireLoader;
@@ -11,6 +12,16 @@ public class MoveToSlot : Node
 {
 	int _slot;
 	bool _completed;
+
+	ILogger<MoveToSlot>? _logger;
+	private ILogger<MoveToSlot> Logger
+	{
+		get
+		{
+			_logger ??= ServiceProvider.GetService<ILoggerFactory>()!.CreateLogger<MoveToSlot>();
+			return _logger;
+		}
+	}
 
 	[DataMember]
 	public int Slot
@@ -35,11 +46,12 @@ public class MoveToSlot : Node
 
 	protected override void OnActivated()
 	{
+		
 		base.OnActivated();
-		Log.Write($"{GetType().Name}: moving to slot {Slot}");
+		Logger.LogInformation($"{GetType().Name}: moving to slot {Slot}");
 		Task.Delay(1500).ContinueWith(_ =>
 		{
-			Log.Write($"{GetType().Name}: at slot {Slot}");
+			Logger.LogInformation($"{GetType().Name}: at slot {Slot}");
 			_completed = true;
 		});
 	}
